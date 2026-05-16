@@ -31,15 +31,52 @@
         .selected .option-letter { background-color: #2563eb; color: white; border-color: #2563eb; }
 
         .paired-question { border-top: 1px solid #f3f4f6; padding-top: 1.5rem; margin-top: 1.5rem; }
-        .grade-badge { padding: 0.5rem 1.5rem; border-radius: 9999px; font-weight: 800; font-size: 1.5rem; }
-
+        
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body>
+<body class="bg-gray-100">
 
-<div id="app" class="exam-container">
+<!-- Home Screen / Instructions -->
+<div id="home-screen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6">
+    <div class="max-w-2xl w-full bg-white rounded-2xl shadow-2xl border border-gray-100 p-10">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-red-600 mb-2">IGCS Listening 0510 / 0511</h1>
+            <p class="text-blue-600 font-bold text-lg">Created by Amanullah Khan 0568959394</p>
+        </div>
+
+        <div class="bg-blue-50 rounded-xl p-8 mb-8 border border-blue-100">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-info-circle text-blue-600"></i> Exam Instructions
+            </h2>
+            <ul class="space-y-4 text-gray-700 font-medium">
+                <li class="flex gap-3">
+                    <i class="fas fa-desktop mt-1 text-blue-500"></i>
+                    <span>You must have a computer or a tablet to do this exam. It doesn’t fit the mobile screen.</span>
+                </li>
+                <li class="flex gap-3">
+                    <i class="fas fa-expand mt-1 text-blue-500"></i>
+                    <span>Use the full screen button to do the exam in full screen.</span>
+                </li>
+                <li class="flex gap-3">
+                    <i class="fas fa-volume-up mt-1 text-blue-500"></i>
+                    <span>Use the audio button to play the audio. Press on it again to pause the audio.</span>
+                </li>
+                <li class="flex gap-3">
+                    <i class="fas fa-clock mt-1 text-blue-500"></i>
+                    <span>You have about 55 minutes to finish the exam.</span>
+                </li>
+            </ul>
+        </div>
+
+        <button onclick="startExam()" class="w-full bg-blue-600 text-white text-xl font-bold py-4 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 flex items-center justify-center gap-3">
+            Start Exam <i class="fas fa-play"></i>
+        </button>
+    </div>
+</div>
+
+<div id="app" class="exam-container hidden">
     <header class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center shadow-sm">
         <div class="flex flex-col">
             <div class="flex items-center gap-4">
@@ -50,7 +87,6 @@
         </div>
         
         <div class="flex items-center gap-4">
-            <!-- Fullscreen Button -->
             <button id="fullscreen-btn" onclick="toggleFullscreen()" class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all" title="Toggle Fullscreen">
                 <i id="fullscreen-icon" class="fas fa-expand text-xl"></i>
             </button>
@@ -66,7 +102,7 @@
                 <audio id="exam-audio" src="exam01.mp3"></audio>
             </div>
             <div class="text-right">
-                <div id="timer" class="text-xl font-mono font-bold text-gray-700">50:00</div>
+                <div id="timer" class="text-xl font-mono font-bold text-gray-700">55:00</div>
                 <div class="text-xs text-gray-500 uppercase tracking-wider">Time Remaining</div>
             </div>
             <button onclick="showConfirmSubmit()" class="bg-slate-800 text-white px-6 py-2 rounded font-semibold hover:bg-slate-700 transition-colors">Finish</button>
@@ -122,15 +158,15 @@
                             <div id="exercise-marks" class="space-y-4"></div>
                         </div>
                         <div class="bg-yellow-50 p-6 rounded-xl border border-yellow-100">
-                            <h3 class="font-bold text-yellow-800 text-sm uppercase mb-3">Grade Thresholds (C21)</h3>
-                            <div class="space-y-1 text-sm font-medium text-yellow-700">
-                                <div class="flex justify-between"><span>Grade A:</span> <span>36+</span></div>
-                                <div class="flex justify-between"><span>Grade B:</span> <span>33+</span></div>
-                                <div class="flex justify-between"><span>Grade C:</span> <span>30+</span></div>
-                                <div class="flex justify-between"><span>Grade D:</span> <span>26+</span></div>
-                                <div class="flex justify-between"><span>Grade E:</span> <span>23+</span></div>
-                                <div class="flex justify-between"><span>Grade F:</span> <span>20+</span></div>
-                                <div class="flex justify-between"><span>Grade G:</span> <span>17+</span></div>
+                            <h3 class="font-bold text-yellow-800 text-sm uppercase mb-3 text-center">Grade Thresholds</h3>
+                            <div class="space-y-1 text-sm font-bold text-yellow-700">
+                                <div class="flex justify-between px-4"><span>Grade A:</span> <span>36+</span></div>
+                                <div class="flex justify-between px-4"><span>Grade B:</span> <span>33+</span></div>
+                                <div class="flex justify-between px-4"><span>Grade C:</span> <span>30+</span></div>
+                                <div class="flex justify-between px-4"><span>Grade D:</span> <span>26+</span></div>
+                                <div class="flex justify-between px-4"><span>Grade E:</span> <span>23+</span></div>
+                                <div class="flex justify-between px-4"><span>Grade F:</span> <span>20+</span></div>
+                                <div class="flex justify-between px-4"><span>Grade G:</span> <span>17+</span></div>
                             </div>
                         </div>
                     </div>
@@ -167,13 +203,11 @@
 
 <script>
     const examData = [
-        // Ex 1
         ...Array.from({length: 8}, (_, i) => ({ id: i + 1, ex: 1, text: [
             "What does the girl decide to eat?", "What has the boy forgotten?", "Where does the girl want to meet her friend?", 
             "What was this week's nature programme on TV about?", "Which is the boy's favourite photo?", 
             "Which sport has the girl given up most recently?", "What did the boy do yesterday morning?", "Who will the girl stay with during the holidays?"
         ][i], options: ["A", "B", "C", "D"], correct: ["C", "B", "A", "D", "D", "A", "B", "C"][i] })),
-        // Ex 2 (Paired 9&10, 11&12, 13&14, 15&16, 17&18)
         { id: 9, ex: 2, text: "How did the girl feel about the trip?", options: ["disappointed by the activities", "confused by some of the artwork", "surprised by what the guide said"], correct: "B" },
         { id: 10, ex: 2, text: "What does the boy suggest for the next trip?", options: ["Students should select the destination", "The trip should be fun rather than educational", "An overnight stay should be included"], correct: "C" },
         { id: 11, ex: 2, text: "Why was the woman unable to get tickets for the concert?", options: ["She had to stay late at her workplace", "The queue to buy them was very long", "There was a technical problem online"], correct: "A" },
@@ -184,16 +218,13 @@
         { id: 16, ex: 2, text: "The first guest on the programme is", options: ["a celebrity", "a researcher", "a businesswoman"], correct: "A" },
         { id: 17, ex: 2, text: "What is the girl's homework about?", options: ["encouraging people to recycle more", "removing rubbish from the oceans", "creating environmentally friendly materials"], correct: "C" },
         { id: 18, ex: 2, text: "The friend advises the girl to", options: ["ask for help from her teacher", "use a particular website he knows", "contact classmates for guidance"], correct: "B" },
-        // Ex 3
         ...Array.from({length: 8}, (_, i) => ({ id: i + 19, ex: 3, text: [
             "Katy says there are currently... known species of penguins.", "Katy thinks the name 'penguin' most probably means", 
             "... can be used to identify the Adélie penguins that Katy studies.", "Katy says that adult Adélie penguins put on lots of weight just before", 
             "Katy says penguins which ... are generally the most successful at raising their young.", "Katy uses technology similar to ... to recognise individual penguins.", 
             "Katy says the average length of a trip to catch food is... hours during the summer.", "The main aim of Katy's research project is to discover"
         ][i], options: [["17", "18", "25"],["fat bird", "white head", "cannot fly"],["A dark stripe over the chest", "A black line across the chin", "A white ring around the eye"],["the colder weather returns in winter", "they lose most of their feathers", "their baby emerges from the egg"],["swim the fastest", "have the most experience", "dive the deepest"],["traffic cameras", "supermarket checkouts", "aircraft control systems"],["48", "60", "72"],["how climate change affects penguins", "how varied the penguins' diet is", "how numbers of penguins are changing"]][i], correct: ["B", "A", "C", "B", "C", "B", "A", "B"][i] })),
-        // Ex 4
         ...Array.from({length: 6}, (_, i) => ({ id: i + 27, ex: 4, text: `Speaker ${i+1}`, options: ["A", "B", "C", "D", "E", "F", "G", "H"], correct: ["H", "E", "B", "G", "A", "F"][i] })),
-        // Ex 5
         ...Array.from({length: 8}, (_, i) => ({ id: i + 33, ex: 5, text: [
             "Theo became interested in making cakes as a result of", "Theo says that his first boss was", 
             "Theo decided to open his own cake-making business after", "Theo says the most difficult aspect of running a business is", 
@@ -207,7 +238,13 @@
     let currentQuestionIndex = 0;
     let userAnswers = {};
     let examFinished = false;
-    let timeRemaining = 50 * 60; 
+    let timeRemaining = 55 * 60; 
+
+    function startExam() {
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+        startTimer();
+    }
 
     function initNav() {
         const container = document.getElementById('nav-container');
@@ -233,7 +270,7 @@
         document.getElementById('progress-bar').style.width = `${(count / 40) * 100}%`;
     }
 
-    function createOptionCard(q, opt, letter, index) {
+    function createOptionCard(q, opt, letter) {
         const card = document.createElement('div');
         card.className = `option-card ${userAnswers[q.id] === letter ? 'selected' : ''}`;
         card.onclick = () => { userAnswers[q.id] = letter; renderQuestion(); };
@@ -270,7 +307,7 @@
             optCont.className = questionObj.ex === 1 ? "options-row-1" : "space-y-2";
             questionObj.options.forEach((opt, i) => {
                 const letter = questionObj.ex === 1 || questionObj.ex === 4 ? opt : String.fromCharCode(65 + i);
-                optCont.appendChild(createOptionCard(questionObj, opt, letter, i));
+                optCont.appendChild(createOptionCard(questionObj, opt, letter));
             });
             wrap.appendChild(optCont);
             target.appendChild(wrap);
@@ -320,24 +357,11 @@
 
     function toggleFullscreen() {
         if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-            });
+            document.documentElement.requestFullscreen();
         } else {
             document.exitFullscreen();
         }
     }
-
-    document.addEventListener('fullscreenchange', () => {
-        const icon = document.getElementById('fullscreen-icon');
-        if (document.fullscreenElement) {
-            icon.classList.remove('fa-expand');
-            icon.classList.add('fa-compress');
-        } else {
-            icon.classList.remove('fa-compress');
-            icon.classList.add('fa-expand');
-        }
-    });
 
     function showConfirmSubmit() {
         const unanswered = 40 - Object.keys(userAnswers).length;
@@ -380,7 +404,7 @@
         }
     }
 
-    window.onload = () => { initNav(); renderQuestion(); startTimer(); };
+    window.onload = () => { initNav(); renderQuestion(); };
 </script>
 </body>
 </html>
